@@ -1,11 +1,9 @@
 
 "use client";
-import DashboardPagination from "@/app/(dashboard)/dashboard/_component/shared/pagination";
 import ErrorContainer from "@/components/shared/ErrorContainer/ErrorContainer";
 import TreatmentSkeleton from "@/components/shared/Skeleton/TreatmentsSkeleton";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import React, { useState } from "react";
 import Autoplay from "embla-carousel-autoplay";
 import {
   Carousel,
@@ -14,6 +12,7 @@ import {
   // CarouselNext,
   // CarouselPrevious,
 } from "@/components/ui/carousel";
+import React from "react";
 
 export interface GalleryImage {
   imageName: string;
@@ -44,7 +43,7 @@ export interface GalleryResponse {
 }
 
 const GallerisContainer = () => {
-  const [currentPage, setCurrentPage] = useState(1);
+  const currentPage = 1;
   const plugin = React.useRef(
     Autoplay({
       delay: 2500, // scroll every 2.5s
@@ -57,7 +56,7 @@ const GallerisContainer = () => {
     queryKey: ["all-galleries", currentPage],
     queryFn: async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/galleries?page=${currentPage}&limit=8`
+        `${process.env.NEXT_PUBLIC_API_URL}/galleries?page=${currentPage}&limit=180`
       );
       return res.json();
     },
@@ -146,25 +145,7 @@ const GallerisContainer = () => {
           </Carousel>
         </div>
 
-        <div className="container pt-8 md:pt-10 lg:pt-12">
-          {data && data?.pagination && data?.pagination?.totalPages > 1 && (
-            <div className="flex items-center justify-between">
-              <p className="text-sm md:text-base text-black/60">
-                Showing page {currentPage} to{" "}
-                {data?.pagination?.itemsPerPage * currentPage} of{" "}
-                {data?.pagination?.totalItems} results
-              </p>
 
-              <div>
-                <DashboardPagination
-                  totalPages={data?.pagination?.totalPages}
-                  currentPage={currentPage}
-                  onPageChange={(page) => setCurrentPage(page)}
-                />
-              </div>
-            </div>
-          )}
-        </div>
       </div>
     </div>
   );
